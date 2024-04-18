@@ -8,6 +8,7 @@ const operation = {
 };
 
 let startNumber = true;
+let lockkeys = false;
 
 function add(a, b) {
   // Code goes here
@@ -26,6 +27,9 @@ function multiply(a, b) {
 
 function divide(a, b) {
   // Code goes here
+  if (b == 0) {
+    return "Error";
+  }
   return a / b;
 }
 
@@ -43,43 +47,56 @@ function operate(operator, firsNum, secondNum) {
 }
 
 function append(key) {
-  if (isNaN(parseInt(key))) {
-    switch (key) {
-      case "=":
-        calculate();
-        resetOperation();
-        break;
-      case ".":
-        break;
-
-      default:
-        if (operation.operator != "") {
+  if (lockkeys == false) {
+    if (isNaN(parseInt(key))) {
+      switch (key) {
+        case "=":
           calculate();
-          operation.firstNum = operation.result;
-        } else {
-          operation.firstNum = parseInt(display.value);
-        }
-        startNumber = true;
-        operation.operator = key;
-        break;
+          resetOperation();
+          break;
+        case ".":
+          if (!display.value.includes(".") && startNumber == false) {
+            display.value += key;
+          } else if (startNumber == true) {
+            display.value = "0" + key;
+            startNumber = false;
+          }
+          break;
+        default:
+          if (operation.operator != "") {
+            calculate();
+            operation.firstNum = operation.result;
+          } else {
+            operation.firstNum = parseFloat(display.value);
+          }
+          startNumber = true;
+          operation.operator = key;
+          break;
+      }
+    } else if (startNumber == true) {
+      display.value = key;
+      startNumber = false;
+    } else {
+      display.value += key;
     }
-  } else if (startNumber == true) {
-    display.value = key;
-    startNumber = false;
-  } else {
-    display.value += key;
   }
 }
 
 function calculate() {
   if (startNumber != true) {
-    operation.secondNum = parseInt(display.value);
+    operation.secondNum = parseFloat(display.value);
     operation.result = operate(
       operation.operator,
       operation.firstNum,
       operation.secondNum
     );
-    display.value = operation.result;
+    if (operation.result == "Error") {
+      display.value = "Error";
+      lockkeys = true;
+    } else {
+      display.value = parseFloat(operation.result.toFixed(8));
+      resetOperation();
+    }
   }
 }
 
@@ -94,4 +111,5 @@ function clearDisplay() {
   display.value = "0";
   resetOperation();
   startNumber = true;
+  lockkeys = false;
 }
