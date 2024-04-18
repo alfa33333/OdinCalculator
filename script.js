@@ -44,16 +44,25 @@ function operate(operator, firsNum, secondNum) {
 
 function append(key) {
   if (isNaN(parseInt(key))) {
-    if (key != ".") {
-      if (operation.operator != "") {
+    switch (key) {
+      case "=":
         calculate();
-        operation.firstNum = operation.result;
-      } else {
+        resetOperation();
+        break;
+      case ".":
+        break;
+
+      default:
+        if (operation.operator != "") {
+          calculate();
+          operation.firstNum = operation.result;
+        } else {
+          operation.firstNum = parseInt(display.value);
+        }
+        startNumber = true;
         operation.operator = key;
-        operation.firstNum = parseInt(display.value);
-      }
+        break;
     }
-    startNumber = true;
   } else if (startNumber == true) {
     display.value = key;
     startNumber = false;
@@ -63,20 +72,26 @@ function append(key) {
 }
 
 function calculate() {
-  operation.secondNum = parseInt(display.value);
-  operation.result = operate(
-    operation.operator,
-    operation.firstNum,
-    operation.secondNum
-  );
-  display.value = operation.result;
+  if (startNumber != true) {
+    operation.secondNum = parseInt(display.value);
+    operation.result = operate(
+      operation.operator,
+      operation.firstNum,
+      operation.secondNum
+    );
+    display.value = operation.result;
+  }
 }
 
-function clearDisplay() {
-  display.value = "0";
+function resetOperation() {
   operation.firstNum = 0;
   operation.secondNum = 0;
   operation.operator = "";
   operation.result = 0;
+}
+
+function clearDisplay() {
+  display.value = "0";
+  resetOperation();
   startNumber = true;
 }
