@@ -9,7 +9,7 @@
     background-color: black;
     color: rgb(152, 233, 136);
     font-family: digital-clock-font;
-    font-size: 28px;
+    /* font-size: 100px; */
     text-align: right;
     padding: 0px 5px;
     margin: 10px;
