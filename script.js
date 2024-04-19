@@ -51,7 +51,9 @@ function append(key) {
     if (isNaN(parseInt(key))) {
       switch (key) {
         case "=":
-          calculate();
+          if (operation.operator != "") {
+            calculate();
+          }
           resetOperation();
           startNumber = true;
           break;
