@@ -53,6 +53,7 @@ function append(key) {
         case "=":
           calculate();
           resetOperation();
+          startNumber = true;
           break;
         case ".":
           if (!display.value.includes(".") && startNumber == false) {
@@ -95,7 +96,7 @@ function calculate() {
       lockkeys = true;
     } else {
       display.value = parseFloat(operation.result.toFixed(8));
-      resetOperation();
+      // resetOperation();
     }
   }
 }
